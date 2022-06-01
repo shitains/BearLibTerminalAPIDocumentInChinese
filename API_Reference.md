@@ -46,24 +46,32 @@ ini.settings.tile-size=16; //初始化瓷砖(tile)设置
 `void terminal_bkcolor(color_t color);`
 
 与颜色类似，此函数设置当前背景颜色。否则，函数的行为与其前景对应项完全相同。请注意，只有第一即最底层的单元格具有背景。
-可以通过读取TK_BKCOLOR状态来检索当前背景色的数值。
+可以通过读取[TK_BKCOLOR状态](http://foo.wyrd.name/en:bearlibterminal:reference#state)来检索当前背景色的数值。
 
 ### composition
 `void terminal_composition(int mode);`
 
-此函数用于设置字符合成模式。当合成关闭时，在单元格中放置瓷砖（通过放置或打印）只需替换该单元格的内容。但是，当“合成”处于启用状态时，该瓷砖将添加到单元格的平铺堆栈中。这具有将多个瓷砖组合成一个瓷砖的视觉效果。对单个单元格中的瓷砖数量没有强制限制。请注意，堆栈中的每个平铺都有自己的前景色和偏移量（请参见put ext）。
+此函数用于设置字符合成模式。当合成关闭时，在单元格中放置瓷砖（通过[put](http://foo.wyrd.name/en:bearlibterminal:reference#put)或[print](http://foo.wyrd.name/en:bearlibterminal:reference#print)）只需替换该单元格的内容。但是，当“合成”处于启用状态时，该瓷砖将添加到单元格的平铺堆栈中。这会把多个瓷砖组合成一个瓷砖。单个单元格中的瓷砖数量没有限制。请注意，堆栈中的每个瓷砖都有自己的前景色和偏移量（请参见[put ext](http://foo.wyrd.name/en:bearlibterminal:reference#put_ext)）。
 
-参数模式可以是以下模式之一：TK_OFF关闭（默认），TK_ON打开。
+参数模式可以是以下模式之一：TK_OFF（默认），TK_ON。
 
-可以通过读取TK_COMPOSITION合成状态来检索当前合成模式。
+可以通过读取[TK_COMPOSITION状态](http://foo.wyrd.name/en:bearlibterminal:reference#state)来检索当前合成模式。
 
 ### layer
 `void terminal_layer(int layer);`
 
-此函数用于选择角色单元格的当前图层。参数是从0到255的索引，其中0是最低（默认）层。只有第一层有背景，对于第1层及以上，bkcolor设置的背景色没有效果。请注意，“清除区域”（clear area）仅影响当前层，而“清除”（clear）将擦除整个场景。
+此函数用于选择角色单元格的当前图层。参数是一个取值从0到255的索引，其中0是最低（默认）层。只有第一层有背景，对于第1层及以上，bkcolor设置的背景色没有效果。请注意，[clear_area](http://foo.wyrd.name/en:bearlibterminal:reference#clear_area)仅影响当前层，而[clear](http://foo.wyrd.name/en:bearlibterminal:reference#clear)将清除所有层。
 
-由于各种原因，图层很有用。一是BearLibTerminal允许比一个字符单元大的平铺。但场景是按固定的从左到右、从上到下的顺序逐单元绘制的。这使得大平铺无法正确覆盖右侧和下方的单元格，因为稍后将绘制这些单元格。使用层，可以将场景分割为几个部分，并在它们之间进行严格的Z排序。
+由于各种原因，图层很有用。一是BearLibTerminal允许比一个字符单元大的瓷砖。但场景是按固定的从左到右、从上到下的顺序逐单元绘制的。这使得大瓷砖无法正确覆盖右侧和下方的单元格，因为稍后将绘制这些单元格。使用层，可以将场景分割为几个部分，并在它们之间进行严格的Z排序。
 
 层的另一个用途是从逻辑上分离场景。层可以单独清除和更新，因此可以将场景的一部分放置在单独的层中，并在不接触其他层的情况下进行更新（例如，动画副本级别和静态UI）。
 
-当前层索引可以从TK_LAYER层状态插槽中读取。
+当前层索引可以从TK_LAYER状态中读取。
+
+## 输出
+### clear
+`void terminal_clear();`
+
+此函数用于清除整个场景（所有[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)）。它还将每个单元格的背景色设置为当前选定的背景色。
+
+### clear_area
