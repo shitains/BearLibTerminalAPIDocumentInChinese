@@ -75,3 +75,6 @@ ini.settings.tile-size=16; //初始化瓷砖(tile)设置
 此函数用于清除整个场景（所有[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)）。它还将每个单元格的背景色设置为当前选定的背景色。
 
 ### clear_area
+```void terminal_clear_area(int x, int y, int w, int h);```
+
+此函数用于清除当前选定[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)的一部分。参数指定左上角和要清除的矩形区域的大小。在第一层上调用时，它还会将受影响单元格的背景色设置为当前选定的背景色。
