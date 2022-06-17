@@ -75,6 +75,30 @@ ini.settings.tile-size=16; //初始化瓷砖(tile)设置
 此函数用于清除整个场景（所有[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)）。它还将每个单元格的背景色设置为当前选定的背景色。
 
 ### clear_area
-```void terminal_clear_area(int x, int y, int w, int h);```
+`void terminal_clear_area(int x, int y, int w, int h);`
 
 此函数用于清除当前选定[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)的一部分。参数指定左上角和要清除的矩形区域的大小。在第一层上调用时，它还会将受影响单元格的背景色设置为当前选定的背景色。
+
+### crop
+`void terminal_crop(int x, int y, int w, int h);`
+
+此函数用于设置当前[层](http://foo.wyrd.name/en:bearlibterminal:reference#layer)的裁剪区域。该区域的尺寸以单元格表示。通过将区域的宽度或高度设置为零或使用“clear()”清除整个场景，可以禁用裁剪。
+
+### refresh
+`void terminal_refresh();`
+
+此函数用于提交场景以进行输出。它还具有重绘场景的效果。
+BearLibTerminal不会在[put]()或[print]()调用时立即绘制到屏幕。相反，场景是以双缓冲方式在屏幕外构建的。如果窗口的内容由于某种原因被破坏（例如，窗口被阻塞，操作系统要求其刷新），BearLibTerminal会重新绘制已提交的“前缓冲区”场景。只有在调用此刷新功能时，修改后的场景才会真正显示在屏幕上。
+自库初始化后首次调用此函数将在屏幕上显示窗口。在打开和第一次刷新调用之间，窗口保持不可见。
+
+### put
+`void terminal_put(int x, int y, int code);`
+
+此函数将与给定字符值关联的瓷砖放在坐标为x,y的单元格中。如果指定的代码与任何瓷砖都没有关联，则库使用带有细矩形的非字符瓷砖。
+请注意，字符代码必须是Unicode值。即使当前选定的字体是仅包含少量瓷砖的位图字体，BearLibTerminal也会在内部将这些瓷砖映射到适当的Unicode值。例如，除非库配置错误，否则在值U+20AC处始终可以使用欧元符号（如果存在）。
+
+### pick
+`int terminal_pick(int x, int y, int index);`
+
+此函数用于返回当前图层上指定单元格中符号/瓷砖的代码。index参数指定单元格中瓷砖的索引。如果单元格中没有此类瓷砖（或单元格为空），则函数将返回0。因此，要枚举单元格中的瓷砖，应该递增索引，直到返回零为止。
+该函数根据终端对瓷砖代码进行反向代码页翻译。编码选项。
